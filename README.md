@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nexus Growth — Landing Page
 
-## Getting Started
+Landing page premium bilingue (FR/EN) pour une agence de croissance digitale.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 15** + **TypeScript**
+- **Tailwind CSS v3**
+- **React Context** (état global : langue + articles blog)
+
+## Structure des fichiers
+
+```
+src/
+├── app/
+│   ├── globals.css          # Styles globaux, animations, variables CSS
+│   ├── layout.tsx           # Layout racine + Google Fonts
+│   ├── page.tsx             # Page d'accueil (wrapper providers)
+│   ├── blog/
+│   │   ├── page.tsx         # Liste des articles
+│   │   └── [slug]/
+│   │       └── page.tsx     # Article individuel
+│   └── admin/
+│       └── page.tsx         # Interface d'ajout d'articles
+├── components/
+│   ├── Nav.tsx              # Navigation responsive + switch de langue
+│   └── HomePage.tsx         # Toutes les sections de la landing page
+└── context/
+    ├── LangContext.tsx       # i18n FR/EN avec toutes les traductions
+    └── BlogContext.tsx       # Store d'articles en mémoire (avec 2 articles par défaut)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| URL            | Description                                    |
+| -------------- | ---------------------------------------------- |
+| `/`            | Landing page complète                          |
+| `/blog`        | Liste des articles                             |
+| `/blog/[slug]` | Article individuel                             |
+| `/admin`       | Interface admin (ajout/suppression d'articles) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Ouvrir [http://localhost:3000](http://localhost:3000)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Fonctionnalités
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🌍 Bilingue FR/EN
 
-## Deploy on Vercel
+- Bouton dans la navbar pour switcher instantanément
+- 100% des textes traduits via `LangContext`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 📝 Blog
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 2 articles de démonstration inclus
+- Page liste avec catégories et temps de lecture
+- Page article avec rendu Markdown simplifié
+- CTA en bas de chaque article
+
+### ⚙️ Admin (`/admin`)
+
+- Formulaire d'ajout d'articles
+- Génération automatique du slug depuis le titre
+- Sélection de catégorie, auteur, date, temps de lecture
+- Liste des articles existants avec boutons Voir / Supprimer
+- ⚠️ Les données sont en mémoire (React state) — pour la persistance, brancher sur une DB ou localStorage
+
+### 🎨 Design
+
+- Palette : Noir `#050505` · Blanc `#f5f5f0` · Vert `#22c55e`
+- Typographie : Playfair Display (titres) + DM Sans (corps) + DM Mono (labels)
+- Animations CSS : fadeUp, grain overlay, marquee logos, green glow
+- Cartes hover avec élévation et bordure verte
+- Grid background subtile en Hero
+- Blob lumineux vert pour la profondeur
+
+## Personnalisation
+
+### Changer les traductions
+
+Modifier `/src/context/LangContext.tsx` — objets `fr` et `en`.
+
+### Ajouter des sections
+
+Modifier `/src/components/HomePage.tsx`.
+
+### Connecter un backend
+
+Remplacer `BlogContext.tsx` par des appels API (fetch vers votre CMS, Supabase, etc.)
+
+## Notes
+
+- Le `BlogContext` est indépendant par page (chaque page wrap ses propres providers).  
+  Pour partager l'état entre pages, déplacer les providers dans `layout.tsx` et ajouter `"use client"` au layout.
+- L'admin n'est pas protégé par une authentification — à ajouter en production.
